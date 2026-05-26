@@ -1,0 +1,6 @@
+{
+  "name": "luma-agencia",
+  "rewrites": [
+    { "source": "/", "destination": "/LUMA.html" }
+  ]
+}
