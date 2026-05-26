@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LUMA — Manifesto Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Inter:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2EE;
+    --text: #0A0A0A;
+    --gold: #C8A96E;
+    --f-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --f-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--f-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .variant {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 48px;
+    border-bottom: 1px solid rgba(10,10,10,0.06);
+  }
+  .variant:last-child { border-bottom: none; }
+
+  .variant-label {
+    position: absolute;
+    top: 40px;
+    left: 48px;
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(10,10,10,0.55);
+  }
+  .variant-index {
+    position: absolute;
+    top: 40px;
+    right: 48px;
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: rgba(10,10,10,0.35);
+  }
+
+  .manifesto-block {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+  }
+  .manifesto-text {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    color: var(--text);
+  }
+  .manifesto-text .line {
+    display: block;
+  }
+  .gold-rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 56px auto 0;
+  }
+
+  /* ---------- VARIANT A — Line by Line ---------- */
+  #varA .manifesto-text .line {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease-out, transform .7s ease-out;
+  }
+  #varA.is-in .manifesto-text .line { opacity: 1; transform: translateY(0); }
+  #varA.is-in .manifesto-text .line:nth-child(1) { transition-delay: 0ms; }
+  #varA.is-in .manifesto-text .line:nth-child(2) { transition-delay: 200ms; }
+  #varA.is-in .manifesto-text .line:nth-child(3) { transition-delay: 400ms; }
+  #varA.is-in .manifesto-text .line:nth-child(4) { transition-delay: 600ms; }
+  #varA .gold-rule {
+    width: 0;
+    transition: width .6s ease-out;
+    transition-delay: 900ms;
+  }
+  #varA.is-in .gold-rule { width: 80px; }
+
+  /* ---------- VARIANT B — Word Cascade ---------- */
+  #varB .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .5s cubic-bezier(0.16,1,0.3,1), transform .5s cubic-bezier(0.16,1,0.3,1);
+  }
+  #varB.is-in .word { opacity: 1; transform: translateY(0); }
+  #varB .gold-rule {
+    opacity: 0;
+    transition: opacity .6s ease-out;
+  }
+  #varB.is-in .gold-rule { opacity: 1; }
+
+  /* ---------- VARIANT C — Reveal Mask ---------- */
+  #varC .manifesto-text .line {
+    position: relative;
+    overflow: hidden;
+  }
+  #varC .manifesto-text .line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    transform-origin: right center;
+    transform: scaleX(1);
+    transition: transform .9s ease-in-out;
+  }
+  #varC.is-in .manifesto-text .line::after { transform: scaleX(0); }
+  #varC.is-in .manifesto-text .line:nth-child(1)::after { transition-delay: 0ms; }
+  #varC.is-in .manifesto-text .line:nth-child(2)::after { transition-delay: 180ms; }
+  #varC.is-in .manifesto-text .line:nth-child(3)::after { transition-delay: 360ms; }
+  #varC.is-in .manifesto-text .line:nth-child(4)::after { transition-delay: 540ms; }
+  /* mask uses transform-origin right so the wipe clears left → right */
+  #varC .manifesto-text .line::after { transform-origin: right center; }
+  #varC .gold-rule {
+    width: 0;
+    transition: width .6s ease-out;
+    transition-delay: 1100ms;
+  }
+  #varC.is-in .gold-rule { width: 80px; }
+
+  /* ---------- VARIANT D — Fade Only ---------- */
+  #varD .manifesto-block {
+    opacity: 0;
+    transition: opacity 1.4s ease-in;
+  }
+  #varD.is-in .manifesto-block { opacity: 1; }
+
+  /* ---------- VARIANT E — Scale Breath ---------- */
+  #varE .manifesto-block {
+    opacity: 0;
+    transform: scale(0.97);
+    transform-origin: center center;
+    transition: opacity 1.1s ease-out, transform 1.1s ease-out;
+  }
+  #varE.is-in .manifesto-block { opacity: 1; transform: scale(1); }
+
+  /* ---------- VARIANT F — Character Rise & Exit ---------- */
+  #varF .manifesto-text { white-space: normal; }
+  #varF .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(50px);
+    filter: blur(4px);
+    transition: opacity .9s cubic-bezier(0.16,1,0.3,1), transform .9s cubic-bezier(0.16,1,0.3,1), filter .9s cubic-bezier(0.16,1,0.3,1);
+  }
+  #varF .char.is-in {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  #varF .char.is-out {
+    opacity: 0;
+    transform: translateY(-60px);
+    filter: blur(4px);
+    transition: opacity .7s ease-in, transform .7s ease-in, filter .7s ease-in;
+  }
+  #varF .gold-rule {
+    width: 0;
+    opacity: 1;
+    transition: width 1s ease-out;
+  }
+  #varF.is-in .gold-rule { width: 80px; }
+  #varF.is-exiting .gold-rule {
+    opacity: 0;
+    transition: opacity .5s ease-in;
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    #varA .manifesto-text .line,
+    #varA .gold-rule,
+    #varB .word,
+    #varB .gold-rule,
+    #varD .manifesto-block,
+    #varE .manifesto-block,
+    #varF .char,
+    #varF .gold-rule {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    #varA .gold-rule,
+    #varC .gold-rule,
+    #varF .gold-rule { width: 80px !important; transition: none !important; }
+    #varC .manifesto-text .line::after { display: none !important; }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    .variant { padding: 100px 24px; }
+    .variant-label, .variant-index { left: 24px; right: 24px; top: 32px; font-size: 10px; }
+    .variant-index { left: auto; }
+    .gold-rule { margin-top: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- F (first) -->
+<section class="variant" id="varF">
+  <div class="variant-label">Variant F · Character Rise &amp; Exit</div>
+  <div class="variant-index">01 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text" data-split="chars">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<!-- A -->
+<section class="variant" id="varA">
+  <div class="variant-label">Variant A · Line by Line</div>
+  <div class="variant-index">02 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<!-- B -->
+<section class="variant" id="varB">
+  <div class="variant-label">Variant B · Word Cascade</div>
+  <div class="variant-index">03 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text" data-split="words">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<!-- C -->
+<section class="variant" id="varC">
+  <div class="variant-label">Variant C · Reveal Mask</div>
+  <div class="variant-index">04 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<!-- D -->
+<section class="variant" id="varD">
+  <div class="variant-label">Variant D · Fade Only</div>
+  <div class="variant-index">05 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<!-- E -->
+<section class="variant" id="varE">
+  <div class="variant-label">Variant E · Scale Breath</div>
+  <div class="variant-index">06 / 06</div>
+  <div class="manifesto-block">
+    <p class="manifesto-text">
+      <span class="line">Arquitetura não é ornamento.</span>
+      <span class="line">É estrutura, identidade e legado —</span>
+      <span class="line">construída uma vez,</span>
+      <span class="line">experimentada por gerações.</span>
+    </p>
+    <span class="gold-rule" aria-hidden="true"></span>
+  </div>
+</section>
+
+<script>
+(function () {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Variant B: split lines into word spans ----------
+  const varB = document.querySelector('#varB [data-split="words"]');
+  if (varB) {
+    let globalIdx = 0;
+    varB.querySelectorAll('.line').forEach(lineEl => {
+      const text = lineEl.textContent.trim();
+      const words = text.split(/\s+/);
+      lineEl.innerHTML = '';
+      words.forEach((w, i) => {
+        const s = document.createElement('span');
+        s.className = 'word';
+        s.textContent = w;
+        s.style.transitionDelay = (globalIdx * 60) + 'ms';
+        lineEl.appendChild(s);
+        if (i < words.length - 1) lineEl.appendChild(document.createTextNode(' '));
+        globalIdx++;
+      });
+    });
+  }
+
+  // ---------- Variant F: split lines into char spans ----------
+  const varFText = document.querySelector('#varF [data-split="chars"]');
+  let varFChars = [];
+  const CHAR_STAGGER_IN = 65;
+  const CHAR_STAGGER_OUT = 50;
+  const CHAR_DUR_IN = 900;
+  const CHAR_DUR_OUT = 700;
+  if (varFText) {
+    let globalIdx = 0;
+    varFText.querySelectorAll('.line').forEach(lineEl => {
+      const text = lineEl.textContent;
+      lineEl.innerHTML = '';
+      for (const ch of text) {
+        const s = document.createElement('span');
+        s.className = 'char';
+        // preserve spaces as non-breaking so the inline-block layout doesn't collapse them
+        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        s.style.transitionDelay = (globalIdx * CHAR_STAGGER_IN) + 'ms';
+        s.setAttribute('data-idx', globalIdx);
+        lineEl.appendChild(s);
+        varFChars.push(s);
+        globalIdx++;
+      }
+    });
+  }
+  const totalChars = varFChars.length;
+  const varFSection = document.getElementById('varF');
+  const varFGold = varFSection ? varFSection.querySelector('.gold-rule') : null;
+  // gold line enters 300ms after last character lands
+  if (varFGold) {
+    const lastCharLand = (totalChars - 1) * CHAR_STAGGER_IN + CHAR_DUR_IN;
+    varFGold.style.transitionDelay = (lastCharLand + 300) + 'ms';
+  }
+
+  // ---------- Intersection observer: entry ----------
+  const sections = document.querySelectorAll('.variant');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        el.classList.add('is-in');
+        if (el.id === 'varF' && !reducedMotion) {
+          // mark characters as entering with will-change, remove after each lands
+          varFChars.forEach((c, i) => {
+            c.style.willChange = 'transform, opacity, filter';
+            c.classList.add('is-in');
+            const landAt = i * CHAR_STAGGER_IN + CHAR_DUR_IN + 50;
+            setTimeout(() => {
+              // only clear if we haven't flipped to exit
+              if (!c.classList.contains('is-out')) c.style.willChange = '';
+            }, landAt);
+          });
+        } else if (el.id === 'varF' && reducedMotion) {
+          varFChars.forEach(c => c.classList.add('is-in'));
+        }
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+  sections.forEach(s => io.observe(s));
+
+  // ---------- Variant F: scroll-linked exit ----------
+  if (varFSection && !reducedMotion && totalChars > 0) {
+    let ticking = false;
+    // window over which the exit completes — sized so the last char finishes around the time section leaves viewport
+    // total exit time ≈ (totalChars-1)*stagger + dur; scroll range should be comparable
+    const EXIT_WINDOW_PX = 900;
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(updateExit);
+        ticking = true;
+      }
+    }
+    function updateExit() {
+      ticking = false;
+      const rect = varFSection.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // exit begins when section top reaches 25% from top of viewport
+      const exitStart = vh * 0.25;
+      // progress 0 when top is at exitStart, 1 after scrolling EXIT_WINDOW_PX further
+      const raw = (exitStart - rect.top) / EXIT_WINDOW_PX;
+      const progress = Math.max(0, Math.min(1, raw));
+
+      if (progress <= 0) {
+        // user scrolled back up — reset to entered state
+        if (varFSection.classList.contains('is-exiting')) {
+          varFSection.classList.remove('is-exiting');
+          varFChars.forEach(c => c.classList.remove('is-out'));
+        }
+        return;
+      }
+
+      varFSection.classList.add('is-exiting');
+
+      // how many chars should be "out" given the progress
+      // each char exits over a short window; total stagger span in progress units:
+      // we want char N to trigger at progress = N / totalChars
+      const triggered = Math.ceil(progress * totalChars);
+      for (let i = 0; i < totalChars; i++) {
+        const c = varFChars[i];
+        if (i < triggered) {
+          if (!c.classList.contains('is-out')) {
+            c.style.willChange = 'transform, opacity, filter';
+            // apply exit transition delay proportional to index so it reads left-to-right
+            c.style.transitionDelay = (i * CHAR_STAGGER_OUT) + 'ms';
+            c.classList.add('is-out');
+            // clean will-change after exit completes
+            const cleanAt = i * CHAR_STAGGER_OUT + CHAR_DUR_OUT + 50;
+            setTimeout(() => {
+              if (c.classList.contains('is-out')) c.style.willChange = '';
+            }, cleanAt);
+          }
+        } else if (c.classList.contains('is-out')) {
+          // scrolled back: reset
+          c.classList.remove('is-out');
+          c.style.transitionDelay = (i * CHAR_STAGGER_IN) + 'ms';
+        }
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+  }
+})();
+</script>
+
+</body>
+</html>

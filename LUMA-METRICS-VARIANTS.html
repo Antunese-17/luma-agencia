@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUMA — Metrics Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --text: #FFFFFF;
+    --accent: #C8A96E;
+    --f-display: 'Cormorant Garamond', Georgia, serif;
+    --f-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--f-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .variant-sec {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 140px 7% 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .vs-label {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ============ Shared CTA band ============ */
+  .vs-cta {
+    margin-top: 80px;
+    text-align: right;
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .vs-cta.is-in { opacity: 1; transform: translateY(0); }
+
+  /* ============================================================
+     VARIANT A — Editorial Manifesto
+     ============================================================ */
+  #varA .a-statement {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.45;
+    color: #FFFFFF;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 80px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.8s ease, transform 0.8s var(--ease-smooth);
+  }
+  #varA.is-in .a-statement { opacity: 1; transform: translateY(0); }
+
+  #varA .a-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: start;
+    gap: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #varA .a-cell {
+    padding: 0 40px;
+    border-left: 1px solid var(--accent);
+    text-align: left;
+    position: relative;
+  }
+  #varA .a-cell:first-child { border-left: none; padding-left: 0; }
+  #varA .a-cell:last-child { padding-right: 0; }
+  #varA .a-num-wrap {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  #varA .a-num {
+    font-family: var(--f-display);
+    font-weight: 200;
+    font-size: 112px;
+    line-height: 1;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+  }
+  #varA .a-unit {
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--accent);
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+  #varA .a-label {
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #666666;
+    margin-top: 16px;
+  }
+  #varA .a-rule {
+    max-width: 1200px;
+    margin: 56px auto 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.8s var(--ease-smooth);
+  }
+  #varA.count-done .a-rule { transform: scaleX(1); }
+
+  /* ============================================================
+     VARIANT B — Architectural Grid
+     ============================================================ */
+  #varB {
+    background-color: var(--bg);
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 39px,
+      rgba(255,255,255,0.015) 39px,
+      rgba(255,255,255,0.015) 40px
+    );
+  }
+  #varB .b-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid #222222;
+    border-left: 1px solid #222222;
+  }
+  #varB .b-cell {
+    position: relative;
+    padding: 48px 56px 40px;
+    min-height: 340px;
+    border-right: 1px solid #222222;
+    border-bottom: 1px solid #222222;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.9s cubic-bezier(0.22, 0.8, 0.2, 1);
+  }
+  #varB.is-in .b-cell.reveal { clip-path: inset(0 0% 0 0); }
+  #varB .b-idx {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 10px;
+    color: #333333;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  #varB .b-num {
+    font-family: var(--f-display);
+    font-weight: 200;
+    font-size: 128px;
+    line-height: 1;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  #varB .b-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 28px;
+  }
+  #varB .b-label {
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #888888;
+  }
+  #varB .b-unit {
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     VARIANT C — Kinetic Counter
+     ============================================================ */
+  #varC .c-head {
+    display: inline-block;
+    margin: 0 auto 80px;
+    position: relative;
+  }
+  #varC .c-head-wrap { text-align: left; max-width: 1200px; margin: 0 auto 0; }
+  #varC .c-head-text {
+    font-family: var(--f-display);
+    font-weight: 200;
+    font-size: 48px;
+    line-height: 1.1;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+    padding-bottom: 14px;
+  }
+  #varC .c-head-rule {
+    height: 2px;
+    background: var(--accent);
+    width: 180px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.7s var(--ease-smooth);
+  }
+  #varC.is-in .c-head-rule { transform: scaleX(1); }
+
+  #varC .c-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #varC .c-cell {
+    padding: 0 36px;
+    border-left: 1px solid #1A1A1A;
+    text-align: left;
+  }
+  #varC .c-cell:first-child { border-left: none; padding-left: 0; }
+  #varC .c-cell:last-child { padding-right: 0; }
+  #varC .c-num {
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--accent);
+    transition: color 0.1s ease;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  #varC .c-num.locked { color: #FFFFFF; }
+  #varC .c-num .c-unit {
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--accent);
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+  }
+  #varC .c-label {
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #555555;
+    margin-top: 18px;
+  }
+
+  /* ============================================================
+     VARIANT D — Narrative Scroll
+     ============================================================ */
+  #varD .d-wrap { max-width: 1200px; margin: 0 auto; width: 100%; }
+  #varD .d-band {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(260px, 340px) 1fr minmax(260px, 340px);
+    align-items: center;
+    height: 160px;
+    border-bottom: 1px solid #1A1A1A;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+  }
+  #varD .d-band:first-child { border-top: 1px solid #1A1A1A; }
+  #varD .d-band.is-in { opacity: 1; transform: translateY(0); }
+  #varD .d-left { display: flex; flex-direction: column; gap: 10px; }
+  #varD .d-num {
+    font-family: var(--f-display);
+    font-weight: 200;
+    font-size: 96px;
+    line-height: 1;
+    color: #FFFFFF;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  #varD .d-num .d-unit {
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  #varD .d-label {
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #444444;
+  }
+  #varD .d-line {
+    height: 1px;
+    background: #1A1A1A;
+    width: 100%;
+  }
+  #varD .d-right {
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 16px;
+    color: #888888;
+    text-align: right;
+    letter-spacing: 0.01em;
+  }
+
+  /* ============================================================
+     VARIANT E — Immersive Statement
+     ============================================================ */
+  #varE { position: relative; }
+  #varE .e-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    background-image: url('assets/e-bg.jpg'), linear-gradient(135deg, #1c1814, #0a0a0a);
+    background-size: cover;
+    background-position: center;
+    filter: blur(60px);
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+  }
+  #varE .e-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  #varE .e-statement {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: 42px;
+    line-height: 1.6;
+    color: #FFFFFF;
+    max-width: 800px;
+    margin: 0 auto;
+    letter-spacing: -0.005em;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.9s ease, transform 0.9s var(--ease-smooth);
+  }
+  #varE.is-in .e-statement { opacity: 1; transform: translateY(0); }
+  #varE .e-num {
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: 52px;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    display: inline-block;
+    min-width: 1ch;
+  }
+  #varE .e-sub {
+    margin-top: 56px;
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0.04em;
+  }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    .vs-cta, #varA .a-statement, #varA .a-rule, #varB .b-cell,
+    #varC .c-head-rule, #varD .d-band, #varE .e-statement {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+    }
+    #varC .c-num { color: #FFFFFF !important; }
+  }
+
+  /* mobile */
+  @media (max-width: 860px) {
+    .variant-sec { padding: 110px 6% 90px; }
+    .vs-label { top: 28px; left: 24px; }
+    #varA .a-row { grid-template-columns: 1fr 1fr; row-gap: 48px; }
+    #varA .a-cell { padding: 0 20px; }
+    #varA .a-cell:nth-child(3) { border-left: none; padding-left: 0; }
+    #varA .a-num { font-size: 80px; }
+    #varB .b-num { font-size: 84px; }
+    #varB .b-cell { padding: 40px 28px 32px; min-height: 260px; }
+    #varC .c-row { grid-template-columns: 1fr 1fr; row-gap: 48px; }
+    #varC .c-cell { padding: 0 18px; }
+    #varC .c-cell:nth-child(3) { border-left: none; padding-left: 0; }
+    #varC .c-num { font-size: 72px; }
+    #varD .d-band { grid-template-columns: 1fr; height: auto; padding: 28px 0; gap: 12px; text-align: left; }
+    #varD .d-line { display: none; }
+    #varD .d-right { text-align: left; }
+    #varD .d-num { font-size: 72px; }
+    #varE .e-statement { font-size: 28px; }
+    #varE .e-num { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- VARIANT A -->
+<section class="variant-sec" id="varA">
+  <span class="vs-label">Variant A · Editorial Manifesto</span>
+  <p class="a-statement">Duas décadas de precisão, escala e permanência.</p>
+  <div class="a-row">
+    <div class="a-cell">
+      <div class="a-num-wrap"><span class="a-num" data-count="68" data-decimals="0">0</span></div>
+      <div class="a-label">Projetos Concluídos</div>
+    </div>
+    <div class="a-cell">
+      <div class="a-num-wrap">
+        <span class="a-num" data-count="2.4" data-decimals="1">0</span>
+        <span class="a-unit">M m²</span>
+      </div>
+      <div class="a-label">Área Construída</div>
+    </div>
+    <div class="a-cell">
+      <div class="a-num-wrap"><span class="a-num" data-count="22" data-decimals="0">0</span></div>
+      <div class="a-label">Anos de Prática</div>
+    </div>
+    <div class="a-cell">
+      <div class="a-num-wrap"><span class="a-num" data-count="14" data-decimals="0">0</span></div>
+      <div class="a-label">Prêmios Internacionais</div>
+    </div>
+  </div>
+  <div class="a-rule"></div>
+  <a class="vs-cta" href="#">Faça parte deste legado. →</a>
+</section>
+
+<!-- VARIANT B -->
+<section class="variant-sec" id="varB">
+  <span class="vs-label">Variant B · Architectural Grid</span>
+  <div class="b-grid">
+    <div class="b-cell" data-idx="0">
+      <span class="b-idx">01</span>
+      <div class="b-num" data-count="68" data-decimals="0">0</div>
+      <div class="b-bottom">
+        <span class="b-label">Projetos Concluídos</span>
+        <span class="b-unit">—</span>
+      </div>
+    </div>
+    <div class="b-cell" data-idx="1">
+      <span class="b-idx">02</span>
+      <div class="b-num" data-count="2.4" data-decimals="1">0</div>
+      <div class="b-bottom">
+        <span class="b-label">Área Construída</span>
+        <span class="b-unit">M m²</span>
+      </div>
+    </div>
+    <div class="b-cell" data-idx="2">
+      <span class="b-idx">03</span>
+      <div class="b-num" data-count="22" data-decimals="0">0</div>
+      <div class="b-bottom">
+        <span class="b-label">Anos de Prática</span>
+        <span class="b-unit">—</span>
+      </div>
+    </div>
+    <div class="b-cell" data-idx="3">
+      <span class="b-idx">04</span>
+      <div class="b-num" data-count="14" data-decimals="0">0</div>
+      <div class="b-bottom">
+        <span class="b-label">Prêmios Internacionais</span>
+        <span class="b-unit">—</span>
+      </div>
+    </div>
+  </div>
+  <a class="vs-cta" href="#">Faça parte deste legado. →</a>
+</section>
+
+<!-- VARIANT C -->
+<section class="variant-sec" id="varC">
+  <span class="vs-label">Variant C · Kinetic Counter</span>
+  <div class="c-head-wrap">
+    <div class="c-head">
+      <div class="c-head-text">Em números.</div>
+      <div class="c-head-rule"></div>
+    </div>
+  </div>
+  <div class="c-row" style="margin-top: 80px;">
+    <div class="c-cell">
+      <div class="c-num" data-kinetic data-final="68" data-decimals="0"><span class="c-val">00</span></div>
+      <div class="c-label">Projetos Concluídos</div>
+    </div>
+    <div class="c-cell">
+      <div class="c-num" data-kinetic data-final="2.4" data-decimals="1"><span class="c-val">0.0</span><span class="c-unit">M m²</span></div>
+      <div class="c-label">Área Construída</div>
+    </div>
+    <div class="c-cell">
+      <div class="c-num" data-kinetic data-final="22" data-decimals="0"><span class="c-val">00</span></div>
+      <div class="c-label">Anos de Prática</div>
+    </div>
+    <div class="c-cell">
+      <div class="c-num" data-kinetic data-final="14" data-decimals="0"><span class="c-val">00</span></div>
+      <div class="c-label">Prêmios Internacionais</div>
+    </div>
+  </div>
+  <a class="vs-cta" href="#">Faça parte deste legado. →</a>
+</section>
+
+<!-- VARIANT D -->
+<section class="variant-sec" id="varD">
+  <span class="vs-label">Variant D · Narrative Scroll</span>
+  <div class="d-wrap">
+    <div class="d-band">
+      <div class="d-left">
+        <div class="d-num"><span class="d-val" data-count="68" data-decimals="0">0</span></div>
+        <div class="d-label">Projetos Concluídos</div>
+      </div>
+      <div class="d-line"></div>
+      <div class="d-right">obras entregues</div>
+    </div>
+    <div class="d-band">
+      <div class="d-left">
+        <div class="d-num"><span class="d-val" data-count="2.4" data-decimals="1">0</span><span class="d-unit">M m²</span></div>
+        <div class="d-label">Área Construída</div>
+      </div>
+      <div class="d-line"></div>
+      <div class="d-right">de espaço construído</div>
+    </div>
+    <div class="d-band">
+      <div class="d-left">
+        <div class="d-num"><span class="d-val" data-count="22" data-decimals="0">0</span></div>
+        <div class="d-label">Anos de Prática</div>
+      </div>
+      <div class="d-line"></div>
+      <div class="d-right">anos de ofício</div>
+    </div>
+    <div class="d-band">
+      <div class="d-left">
+        <div class="d-num"><span class="d-val" data-count="14" data-decimals="0">0</span></div>
+        <div class="d-label">Prêmios Internacionais</div>
+      </div>
+      <div class="d-line"></div>
+      <div class="d-right">reconhecimentos globais</div>
+    </div>
+  </div>
+  <a class="vs-cta" href="#">Faça parte deste legado. →</a>
+</section>
+
+<!-- VARIANT E -->
+<section class="variant-sec" id="varE">
+  <div class="e-bg" aria-hidden="true"></div>
+  <span class="vs-label">Variant E · Immersive Statement</span>
+  <div class="e-inner">
+    <p class="e-statement">
+      Em <span class="e-num" data-count="68" data-decimals="0">0</span> projetos entregues ao longo de <span class="e-num" data-count="22" data-decimals="0">0</span> anos,
+      construímos <span class="e-num" data-count="2.4" data-decimals="1" data-suffix="M m²">0</span> de espaço para o mundo corporativo,
+      acumulando <span class="e-num" data-count="14" data-decimals="0">0</span> prêmios internacionais.
+    </p>
+    <div class="e-sub">Uma trajetória de precisão, escala e permanência.</div>
+  </div>
+  <a class="vs-cta" href="#">Faça parte deste legado. →</a>
+</section>
+
+<script>
+(function () {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatNum(val, decimals) {
+    return decimals > 0 ? val.toFixed(decimals) : String(Math.round(val));
+  }
+
+  // Standard count-up animation (ease-out)
+  function countUp(el, final, decimals, duration = 2500, onDone) {
+    if (reduced) {
+      el.textContent = formatNum(final, decimals);
+      if (onDone) onDone();
+      return;
+    }
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = formatNum(final * eased, decimals);
+      if (t < 1) requestAnimationFrame(tick);
+      else {
+        el.textContent = formatNum(final, decimals);
+        if (onDone) onDone();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Kinetic "departures board" cycler: random values, then slam to final
+  function kineticCount(el, finalValRaw, decimals, duration = 1800, onDone) {
+    const valEl = el.querySelector('.c-val') || el;
+    const finalVal = parseFloat(finalValRaw);
+    if (reduced) {
+      valEl.textContent = formatNum(finalVal, decimals);
+      el.classList.add('locked');
+      if (onDone) onDone();
+      return;
+    }
+    const start = performance.now();
+    const maxRange = Math.max(finalVal * 3, 99);
+    function tick(now) {
+      const elapsed = now - start;
+      if (elapsed < duration) {
+        // slower cycling as we approach the end
+        const progress = elapsed / duration;
+        const jitter = Math.random() * maxRange;
+        valEl.textContent = formatNum(jitter, decimals);
+        // random interval 40-90ms, slower toward end
+        const wait = 40 + progress * 60;
+        setTimeout(() => requestAnimationFrame(tick), wait);
+      } else {
+        valEl.textContent = formatNum(finalVal, decimals);
+        // lock snap — color change triggers via CSS class
+        requestAnimationFrame(() => {
+          el.classList.add('locked');
+          if (onDone) onDone();
+        });
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function runVariantA(sec) {
+    sec.classList.add('is-in');
+    const nums = sec.querySelectorAll('.a-num');
+    let done = 0;
+    nums.forEach(el => {
+      const final = parseFloat(el.dataset.count);
+      const dec = parseInt(el.dataset.decimals, 10) || 0;
+      countUp(el, final, dec, 2500, () => {
+        done++;
+        if (done === nums.length) {
+          sec.classList.add('count-done');
+          setTimeout(() => sec.querySelector('.vs-cta').classList.add('is-in'), 900);
+        }
+      });
+    });
+  }
+
+  function runVariantB(sec) {
+    sec.classList.add('is-in');
+    const cells = sec.querySelectorAll('.b-cell');
+    let lastDone = 0;
+    cells.forEach((cell, i) => {
+      setTimeout(() => {
+        cell.classList.add('reveal');
+        const numEl = cell.querySelector('.b-num');
+        const final = parseFloat(numEl.dataset.count);
+        const dec = parseInt(numEl.dataset.decimals, 10) || 0;
+        // count starts just after clip-path begins revealing
+        setTimeout(() => {
+          countUp(numEl, final, dec, 1800, () => {
+            lastDone++;
+            if (lastDone === cells.length) {
+              setTimeout(() => sec.querySelector('.vs-cta').classList.add('is-in'), 300);
+            }
+          });
+        }, 250);
+      }, i * 200);
+    });
+  }
+
+  function runVariantC(sec) {
+    sec.classList.add('is-in');
+    const nums = sec.querySelectorAll('.c-num');
+    // head rule draws first (700ms), then numbers fire with stagger 300ms
+    let done = 0;
+    setTimeout(() => {
+      nums.forEach((el, i) => {
+        setTimeout(() => {
+          const final = parseFloat(el.dataset.final);
+          const dec = parseInt(el.dataset.decimals, 10) || 0;
+          kineticCount(el, final, dec, 1800, () => {
+            done++;
+            if (done === nums.length) {
+              setTimeout(() => sec.querySelector('.vs-cta').classList.add('is-in'), 400);
+            }
+          });
+        }, i * 300);
+      });
+    }, 750);
+  }
+
+  function runVariantD(sec) {
+    const bands = sec.querySelectorAll('.d-band');
+    let lastDone = 0;
+    bands.forEach((band, i) => {
+      setTimeout(() => {
+        band.classList.add('is-in');
+        const valEl = band.querySelector('.d-val');
+        const final = parseFloat(valEl.dataset.count);
+        const dec = parseInt(valEl.dataset.decimals, 10) || 0;
+        countUp(valEl, final, dec, 1600, () => {
+          lastDone++;
+          if (lastDone === bands.length) {
+            setTimeout(() => sec.querySelector('.vs-cta').classList.add('is-in'), 400);
+          }
+        });
+      }, i * 150);
+    });
+  }
+
+  function runVariantE(sec) {
+    sec.classList.add('is-in');
+    const nums = sec.querySelectorAll('.e-num');
+    let done = 0;
+    // statement fades in first; then numbers count with 500ms stagger
+    setTimeout(() => {
+      nums.forEach((el, i) => {
+        setTimeout(() => {
+          const final = parseFloat(el.dataset.count);
+          const dec = parseInt(el.dataset.decimals, 10) || 0;
+          const suffix = el.dataset.suffix ? ' ' + el.dataset.suffix : '';
+          if (reduced) {
+            el.textContent = formatNum(final, dec) + suffix;
+            done++;
+            if (done === nums.length) sec.querySelector('.vs-cta').classList.add('is-in');
+            return;
+          }
+          const start = performance.now();
+          const duration = 1400;
+          function tick(now) {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = formatNum(final * eased, dec) + suffix;
+            if (t < 1) requestAnimationFrame(tick);
+            else {
+              el.textContent = formatNum(final, dec) + suffix;
+              done++;
+              if (done === nums.length) {
+                setTimeout(() => sec.querySelector('.vs-cta').classList.add('is-in'), 500);
+              }
+            }
+          }
+          requestAnimationFrame(tick);
+        }, i * 500);
+      });
+    }, 500);
+  }
+
+  const runners = {
+    varA: runVariantA,
+    varB: runVariantB,
+    varC: runVariantC,
+    varD: runVariantD,
+    varE: runVariantE,
+  };
+
+  const triggered = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !triggered.has(entry.target.id)) {
+        triggered.add(entry.target.id);
+        const run = runners[entry.target.id];
+        if (run) run(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.variant-sec').forEach(sec => io.observe(sec));
+})();
+</script>
+
+</body>
+</html>

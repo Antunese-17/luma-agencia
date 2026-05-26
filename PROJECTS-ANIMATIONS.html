@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>LUMA — Projects Grid Animations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --text: #0A0A0A;
+    --gold: #C8A96E;
+    --muted: #8A8A8A;
+    --hairline: #E8E6E2;
+    --f-display: 'Cormorant Garamond', Georgia, serif;
+    --f-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-curtain: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--f-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+
+  .variant {
+    position: relative;
+    padding: 140px 7% 160px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .variant:last-child { border-bottom: none; }
+
+  .variant-tag {
+    position: absolute;
+    top: 48px;
+    left: 7%;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 80px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+  .section-head h2 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(40px, 4.2vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    max-width: 14ch;
+  }
+  .section-head-aside {
+    color: var(--muted);
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 380px;
+    justify-self: end;
+  }
+
+  /* ---------- Grid ---------- */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+  }
+  .p-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/2;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .p-card.tall {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    aspect-ratio: 3/4;
+  }
+  .p-card-img {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .p-card-img .placeholder {
+    width: 100%;
+    height: 100%;
+    transition: transform .5s ease;
+    transform-origin: center center;
+  }
+  .p-card:hover .p-card-img .placeholder { transform: scale(1.05); }
+
+  /* Dark hover overlay */
+  .p-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.85) 100%);
+    transform: translateY(100%);
+    transition: transform .45s ease;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    padding: 32px;
+  }
+  .p-card:hover .p-card-overlay { transform: translateY(0); }
+  .p-card-name {
+    font-family: var(--f-display);
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 1.15;
+    color: #FFFFFF;
+    opacity: 0;
+    transition: opacity .35s ease .12s;
+  }
+  .p-card:hover .p-card-name { opacity: 1; }
+  .p-card-tag {
+    position: absolute;
+    top: 20px; left: 20px;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.95);
+    mix-blend-mode: difference;
+    z-index: 3;
+  }
+
+  /* ---------- VARIANT A — Stagger Rise ---------- */
+  #varA .p-card {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity .8s var(--ease-smooth), transform .8s var(--ease-smooth);
+  }
+  #varA.is-in .p-card { opacity: 1; transform: translateY(0); }
+  #varA.is-in .p-card:nth-child(1) { transition-delay: 0ms; }
+  #varA.is-in .p-card:nth-child(2) { transition-delay: 150ms; }
+  #varA.is-in .p-card:nth-child(3) { transition-delay: 300ms; }
+
+  /* ---------- VARIANT B — Curtain Reveal ---------- */
+  #varB .p-card {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1s var(--ease-curtain);
+  }
+  #varB.is-in .p-card { clip-path: inset(0% 0 0 0); }
+  #varB.is-in .p-card:nth-child(1) { transition-delay: 0ms; }
+  #varB.is-in .p-card:nth-child(2) { transition-delay: 200ms; }
+  #varB.is-in .p-card:nth-child(3) { transition-delay: 400ms; }
+
+  /* ---------- VARIANT C — Scale In ---------- */
+  #varC .p-card {
+    opacity: 0;
+    transform: scale(0.92);
+    transform-origin: center center;
+    transition: opacity .9s ease-out, transform .9s ease-out;
+  }
+  #varC.is-in .p-card { opacity: 1; transform: scale(1); }
+  #varC.is-in .p-card:nth-child(1) { transition-delay: 0ms; }
+  #varC.is-in .p-card:nth-child(2) { transition-delay: 120ms; }
+  #varC.is-in .p-card:nth-child(3) { transition-delay: 240ms; }
+
+  /* ---------- VARIANT D — Horizontal Slide ---------- */
+  #varD .p-card {
+    opacity: 0;
+    transition: opacity .85s var(--ease-smooth), transform .85s var(--ease-smooth);
+  }
+  #varD .p-card:not(.tall) { transform: translateX(-40px); }
+  #varD .p-card.tall { transform: translateX(40px); }
+  #varD.is-in .p-card { opacity: 1; transform: translateX(0); }
+
+  /* ---------- VARIANT E — Sequential Fade + Line ---------- */
+  #varE .reveal-line {
+    position: relative;
+    height: 1px;
+    width: 100%;
+    margin-bottom: 40px;
+    background: transparent;
+    overflow: hidden;
+  }
+  #varE .reveal-line::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .6s ease-out;
+  }
+  #varE.is-in .reveal-line::before { transform: scaleX(1); }
+  #varE .p-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .7s ease-out, transform .7s ease-out;
+  }
+  #varE.is-in .p-card { opacity: 1; transform: translateY(0); }
+  /* cards start after line finishes drawing (~600ms) */
+  #varE.is-in .p-card:nth-child(1) { transition-delay: 600ms; }
+  #varE.is-in .p-card:nth-child(2) { transition-delay: 780ms; }
+  #varE.is-in .p-card:nth-child(3) { transition-delay: 960ms; }
+  /* line is nth-child(1) structurally but it's inside a wrapper, so reset */
+  #varE .projects-grid .p-card:nth-child(1) { transition-delay: 600ms; }
+  #varE .projects-grid .p-card:nth-child(2) { transition-delay: 780ms; }
+  #varE .projects-grid .p-card:nth-child(3) { transition-delay: 960ms; }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .variant .p-card,
+    #varE .reveal-line::before {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 860px) {
+    .variant { padding: 100px 6% 120px; }
+    .variant-tag { top: 36px; left: 6%; }
+    .section-head { grid-template-columns: 1fr; gap: 24px; margin-bottom: 56px; }
+    .section-head-aside { justify-self: start; }
+    .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+    .p-card { aspect-ratio: 3/2; }
+    .p-card.tall { grid-column: auto; grid-row: auto; aspect-ratio: 3/4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Reusable card content template via function below. Each variant has its own grid instance. -->
+
+<!-- A -->
+<section class="variant" id="varA">
+  <div class="variant-tag">Variant A · Stagger Rise</div>
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Obra Selecionada</span>
+      <h2>Projetos que definem<br>o seu tempo.</h2>
+    </div>
+    <p class="section-head-aside">Cada projeto é concebido como um compromisso de longo prazo com seus ocupantes, seu entorno e sua permanência material.</p>
+  </div>
+  <div class="projects-grid" data-grid></div>
+</section>
+
+<!-- B -->
+<section class="variant" id="varB">
+  <div class="variant-tag">Variant B · Curtain Reveal</div>
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Obra Selecionada</span>
+      <h2>Projetos que definem<br>o seu tempo.</h2>
+    </div>
+    <p class="section-head-aside">Cada projeto é concebido como um compromisso de longo prazo com seus ocupantes, seu entorno e sua permanência material.</p>
+  </div>
+  <div class="projects-grid" data-grid></div>
+</section>
+
+<!-- C -->
+<section class="variant" id="varC">
+  <div class="variant-tag">Variant C · Scale In</div>
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Obra Selecionada</span>
+      <h2>Projetos que definem<br>o seu tempo.</h2>
+    </div>
+    <p class="section-head-aside">Cada projeto é concebido como um compromisso de longo prazo com seus ocupantes, seu entorno e sua permanência material.</p>
+  </div>
+  <div class="projects-grid" data-grid></div>
+</section>
+
+<!-- D -->
+<section class="variant" id="varD">
+  <div class="variant-tag">Variant D · Horizontal Slide</div>
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Obra Selecionada</span>
+      <h2>Projetos que definem<br>o seu tempo.</h2>
+    </div>
+    <p class="section-head-aside">Cada projeto é concebido como um compromisso de longo prazo com seus ocupantes, seu entorno e sua permanência material.</p>
+  </div>
+  <div class="projects-grid" data-grid></div>
+</section>
+
+<!-- E -->
+<section class="variant" id="varE">
+  <div class="variant-tag">Variant E · Sequential Fade + Line</div>
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Obra Selecionada</span>
+      <h2>Projetos que definem<br>o seu tempo.</h2>
+    </div>
+    <p class="section-head-aside">Cada projeto é concebido como um compromisso de longo prazo com seus ocupantes, seu entorno e sua permanência material.</p>
+  </div>
+  <div class="reveal-line" aria-hidden="true"></div>
+  <div class="projects-grid" data-grid></div>
+</section>
+
+<script>
+(function () {
+  // Card data — three cards per variant. Placeholders use solid tones from the brief.
+  const cards = [
+    { name: 'Sede Banco Atlântico', tag: '01 / Corporativo', color: '#D4CFC9', cls: '' },
+    { name: 'Instituto Roca de Artes', tag: '02 / Cultural',  color: '#CDD4C9', cls: '' },
+    { name: 'Torre Pinheiros',       tag: '03 / Uso Misto',  color: '#C9CDD4', cls: 'tall' }
+  ];
+
+  function buildCard(c) {
+    const a = document.createElement('a');
+    a.className = 'p-card' + (c.cls ? ' ' + c.cls : '');
+    a.href = '#';
+    a.innerHTML = `
+      <div class="p-card-img">
+        <div class="placeholder" style="background:${c.color}"></div>
+      </div>
+      <span class="p-card-tag">${c.tag}</span>
+      <div class="p-card-overlay">
+        <h3 class="p-card-name">${c.name}</h3>
+      </div>
+    `;
+    return a;
+  }
+
+  document.querySelectorAll('.projects-grid[data-grid]').forEach(grid => {
+    cards.forEach(c => grid.appendChild(buildCard(c)));
+  });
+
+  // Intersection observer: play once, threshold 0.15
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.variant').forEach(v => io.observe(v));
+})();
+</script>
+
+</body>
+</html>

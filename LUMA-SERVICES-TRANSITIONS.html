@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUMA — Services Transitions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --text: #0A0A0A;
+    --accent: #C8A96E;
+    --f-display: 'Cormorant Garamond', Georgia, serif;
+    --f-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--f-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ul { list-style: none; }
+
+  /* ---------- Section shell ---------- */
+  .variant-sec {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid #E8E6E2;
+  }
+  .variant-sec:last-child { border-bottom: none; }
+
+  /* Layer 1: blurred bg + overlay */
+  .vs-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .vs-bg-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    filter: blur(40px);
+    transform: scale(1.08);
+    opacity: 0;
+    transition: opacity .5s ease;
+  }
+  .vs-bg-layer.is-active { opacity: 1; }
+  .vs-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.58);
+  }
+
+  /* Layer 2: content */
+  .vs-content {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    min-height: 100vh;
+    padding: 100px 7% 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .vs-label {
+    position: absolute;
+    top: 36px;
+    left: 7%;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .vs-counter {
+    position: absolute;
+    top: 36px;
+    right: 7%;
+    font-family: var(--f-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .vs-counter .sep { margin: 0 6px; }
+
+  /* Shared item base */
+  .vs-list { position: relative; }
+  .vs-item {
+    font-family: var(--f-display);
+    color: var(--text);
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    letter-spacing: -0.005em;
+    user-select: none;
+  }
+  .vs-item::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: 50%;
+    width: 2px;
+    height: 36px;
+    background: var(--accent);
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .vs-item.is-active::before { opacity: 1; }
+
+  /* ---------- VARIANT A: Scale Focus ---------- */
+  #varA .vs-item {
+    font-weight: 300;
+    font-size: 46px;
+    line-height: 1.1;
+    opacity: 0.25;
+    margin-bottom: 46px;
+    transform: translateX(0);
+    transition: font-size 0.45s var(--ease-smooth),
+                opacity 0.45s var(--ease-smooth),
+                transform 0.45s var(--ease-smooth),
+                font-weight 0.45s var(--ease-smooth);
+  }
+  #varA .vs-item.is-active {
+    font-size: 58px;
+    opacity: 1;
+    transform: translateX(12px);
+    font-weight: 400;
+  }
+  #varA .vs-item:last-child { margin-bottom: 0; }
+
+  /* ---------- VARIANT B: Blur Retreat ---------- */
+  #varB .vs-item {
+    font-weight: 300;
+    font-size: 52px;
+    line-height: 1.1;
+    opacity: 0.3;
+    filter: blur(1.5px);
+    margin-bottom: 52px;
+    transition: opacity 0.5s ease, filter 0.5s ease, font-weight 0.5s ease;
+  }
+  #varB .vs-item.is-active {
+    opacity: 1;
+    filter: blur(0px);
+    font-weight: 400;
+  }
+  #varB .vs-item:last-child { margin-bottom: 0; }
+
+  /* ---------- VARIANT C: Gold Sweep ---------- */
+  #varC .vs-item {
+    font-weight: 300;
+    font-size: 54px;
+    line-height: 1.15;
+    opacity: 0.22;
+    margin-bottom: 48px;
+    padding: 6px 7% 6px 0;
+    margin-left: -7%;
+    padding-left: 7%;
+    background: linear-gradient(90deg, rgba(200,169,110,0) 0%, transparent 70%);
+    transition: opacity 0.35s ease, background 0.4s ease, font-weight 0.4s ease;
+  }
+  #varC .vs-item.is-active {
+    opacity: 1;
+    font-weight: 400;
+    background: linear-gradient(90deg, rgba(200,169,110,0.08) 0%, transparent 70%);
+  }
+  #varC .vs-item.is-active::before {
+    box-shadow: 0 0 16px rgba(200,169,110,0.55);
+  }
+  #varC .vs-item:last-child { margin-bottom: 0; }
+
+  /* ---------- VARIANT D: Vertical Drift ---------- */
+  #varD .vs-item {
+    font-weight: 300;
+    font-size: 44px;
+    line-height: 1.1;
+    opacity: 0.2;
+    margin-bottom: 40px;
+    transform: translateY(0);
+    transition: opacity 0.5s var(--ease-smooth),
+                transform 0.5s var(--ease-smooth),
+                font-size 0.5s var(--ease-smooth),
+                font-weight 0.5s var(--ease-smooth);
+  }
+  #varD .vs-item.is-above { transform: translateY(-6px); }
+  #varD .vs-item.is-below { transform: translateY(6px); }
+  #varD .vs-item.is-active {
+    opacity: 1;
+    font-size: 58px;
+    transform: translateY(0);
+    font-weight: 400;
+  }
+  #varD .vs-item:last-child { margin-bottom: 0; }
+
+  /* ---------- VARIANT E: Character Morph ---------- */
+  #varE .vs-item {
+    font-weight: 300;
+    font-size: 54px;
+    line-height: 1.15;
+    opacity: 0.22;
+    margin-bottom: 48px;
+    transition: opacity 0.3s ease, font-weight 0.3s ease;
+  }
+  #varE .vs-item.is-active {
+    opacity: 1;
+    font-weight: 400;
+  }
+  #varE .vs-item:last-child { margin-bottom: 0; }
+  #varE .vs-item .char {
+    display: inline-block;
+    transition: transform 0.6s var(--ease-smooth), opacity 0.4s ease;
+  }
+  #varE .vs-item.is-active .char.morph-in {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  #varE .vs-item.is-active .char.morph-in.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  #varE .vs-item .char.morph-out {
+    transition: opacity 0.3s ease;
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .vs-item, .vs-item .char, .vs-bg-layer, .vs-item::before {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    .vs-content { padding: 80px 6% 60px; }
+    .vs-label, .vs-counter { top: 24px; }
+    .vs-label { left: 6%; }
+    .vs-counter { right: 6%; }
+    #varA .vs-item, #varA .vs-item.is-active,
+    #varB .vs-item,
+    #varC .vs-item, #varC .vs-item.is-active,
+    #varD .vs-item, #varD .vs-item.is-active,
+    #varE .vs-item {
+      font-size: 34px;
+    }
+    #varA .vs-item.is-active { font-size: 42px; }
+    #varC .vs-item { margin-left: -6%; padding-left: 6%; padding-right: 6%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Variant A -->
+<section class="variant-sec" id="varA" data-variant="A">
+  <div class="vs-bg" aria-hidden="true">
+    <div class="vs-bg-layer is-active" data-idx="0" style="background-image: url('assets/service-01.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="1" style="background-image: url('assets/service-02.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="2" style="background-image: url('assets/service-03.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="3" style="background-image: url('assets/service-04.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="4" style="background-image: url('assets/service-05.jpg')"></div>
+    <div class="vs-bg-overlay"></div>
+  </div>
+  <div class="vs-content">
+    <span class="vs-label">Variant A · Scale Focus</span>
+    <span class="vs-counter"><b class="cur">01</b><span class="sep">—</span>05</span>
+    <ul class="vs-list"></ul>
+  </div>
+</section>
+
+<!-- Variant B -->
+<section class="variant-sec" id="varB" data-variant="B">
+  <div class="vs-bg" aria-hidden="true">
+    <div class="vs-bg-layer is-active" data-idx="0" style="background-image: url('assets/service-01.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="1" style="background-image: url('assets/service-02.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="2" style="background-image: url('assets/service-03.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="3" style="background-image: url('assets/service-04.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="4" style="background-image: url('assets/service-05.jpg')"></div>
+    <div class="vs-bg-overlay"></div>
+  </div>
+  <div class="vs-content">
+    <span class="vs-label">Variant B · Blur Retreat</span>
+    <span class="vs-counter"><b class="cur">01</b><span class="sep">—</span>05</span>
+    <ul class="vs-list"></ul>
+  </div>
+</section>
+
+<!-- Variant C -->
+<section class="variant-sec" id="varC" data-variant="C">
+  <div class="vs-bg" aria-hidden="true">
+    <div class="vs-bg-layer is-active" data-idx="0" style="background-image: url('assets/service-01.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="1" style="background-image: url('assets/service-02.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="2" style="background-image: url('assets/service-03.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="3" style="background-image: url('assets/service-04.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="4" style="background-image: url('assets/service-05.jpg')"></div>
+    <div class="vs-bg-overlay"></div>
+  </div>
+  <div class="vs-content">
+    <span class="vs-label">Variant C · Gold Sweep</span>
+    <span class="vs-counter"><b class="cur">01</b><span class="sep">—</span>05</span>
+    <ul class="vs-list"></ul>
+  </div>
+</section>
+
+<!-- Variant D -->
+<section class="variant-sec" id="varD" data-variant="D">
+  <div class="vs-bg" aria-hidden="true">
+    <div class="vs-bg-layer is-active" data-idx="0" style="background-image: url('assets/service-01.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="1" style="background-image: url('assets/service-02.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="2" style="background-image: url('assets/service-03.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="3" style="background-image: url('assets/service-04.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="4" style="background-image: url('assets/service-05.jpg')"></div>
+    <div class="vs-bg-overlay"></div>
+  </div>
+  <div class="vs-content">
+    <span class="vs-label">Variant D · Vertical Drift</span>
+    <span class="vs-counter"><b class="cur">01</b><span class="sep">—</span>05</span>
+    <ul class="vs-list"></ul>
+  </div>
+</section>
+
+<!-- Variant E -->
+<section class="variant-sec" id="varE" data-variant="E">
+  <div class="vs-bg" aria-hidden="true">
+    <div class="vs-bg-layer is-active" data-idx="0" style="background-image: url('assets/service-01.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="1" style="background-image: url('assets/service-02.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="2" style="background-image: url('assets/service-03.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="3" style="background-image: url('assets/service-04.jpg')"></div>
+    <div class="vs-bg-layer" data-idx="4" style="background-image: url('assets/service-05.jpg')"></div>
+    <div class="vs-bg-overlay"></div>
+  </div>
+  <div class="vs-content">
+    <span class="vs-label">Variant E · Character Morph</span>
+    <span class="vs-counter"><b class="cur">01</b><span class="sep">—</span>05</span>
+    <ul class="vs-list"></ul>
+  </div>
+</section>
+
+<script>
+(function () {
+  const SERVICES = [
+    'Sedes Corporativas',
+    'Instituições Culturais',
+    'Empreendimentos de Uso Misto',
+    'Hospitalidade & Varejo de Luxo',
+    'Planejamento Urbano'
+  ];
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function splitChars(text) {
+    const frag = document.createDocumentFragment();
+    for (const ch of text) {
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.textContent = ch;
+      if (ch === ' ') span.style.whiteSpace = 'pre';
+      frag.appendChild(span);
+    }
+    return frag;
+  }
+
+  function buildVariant(sectionId) {
+    const sec = document.getElementById(sectionId);
+    const list = sec.querySelector('.vs-list');
+    const counterNum = sec.querySelector('.vs-counter .cur');
+    const bgLayers = sec.querySelectorAll('.vs-bg-layer');
+    const isVarE = sectionId === 'varE';
+
+    const items = SERVICES.map((label, idx) => {
+      const li = document.createElement('li');
+      li.className = 'vs-item' + (idx === 0 ? ' is-active' : '');
+      li.dataset.idx = String(idx);
+      if (isVarE) {
+        li.appendChild(splitChars(label));
+      } else {
+        li.textContent = label;
+      }
+      list.appendChild(li);
+      return li;
+    });
+
+    function applyDriftClasses(activeIdx) {
+      items.forEach((it, i) => {
+        it.classList.toggle('is-above', i < activeIdx);
+        it.classList.toggle('is-below', i > activeIdx);
+      });
+    }
+
+    function setActive(newIdx, { initial = false } = {}) {
+      const prevActive = items.findIndex(it => it.classList.contains('is-active'));
+      if (prevActive === newIdx && !initial) return;
+
+      if (sectionId === 'varE' && !initial && !reducedMotion) {
+        // Step 1: outgoing chars fade to low opacity, stagger 20ms
+        const outItem = items[prevActive];
+        if (outItem) {
+          const outChars = outItem.querySelectorAll('.char');
+          outChars.forEach((c, i) => {
+            c.classList.add('morph-out');
+            c.style.transitionDelay = (i * 20) + 'ms';
+            c.style.opacity = '0.2';
+          });
+        }
+        // Simultaneously crossfade all other inactive items to 0.22 — already handled by CSS opacity.
+        // After Step 1 duration (~ 0.3s + last stagger), swap active and run Step 2
+        const outDuration = 300 + (outItem ? outItem.querySelectorAll('.char').length * 20 : 0);
+
+        setTimeout(() => {
+          items.forEach(it => it.classList.remove('is-active'));
+          const incoming = items[newIdx];
+          incoming.classList.add('is-active');
+
+          // Reset outgoing char styles so they animate normally next cycle
+          if (outItem) {
+            outItem.querySelectorAll('.char').forEach(c => {
+              c.classList.remove('morph-out');
+              c.style.transitionDelay = '';
+              c.style.opacity = '';
+            });
+          }
+
+          // Step 2: incoming chars rise + fade in, stagger 18ms
+          const inChars = incoming.querySelectorAll('.char');
+          inChars.forEach((c, i) => {
+            c.classList.add('morph-in');
+            c.style.transitionDelay = (i * 18) + 'ms';
+            c.style.transform = 'translateY(16px)';
+            c.style.opacity = '0';
+          });
+
+          // Force reflow, then apply end state
+          void incoming.offsetWidth;
+          requestAnimationFrame(() => {
+            inChars.forEach(c => {
+              c.classList.add('show');
+              c.style.transform = '';
+              c.style.opacity = '';
+            });
+            // Cleanup
+            const maxDelay = (inChars.length - 1) * 18 + 600;
+            setTimeout(() => {
+              inChars.forEach(c => {
+                c.classList.remove('morph-in', 'show');
+                c.style.transitionDelay = '';
+              });
+            }, maxDelay + 50);
+          });
+        }, outDuration);
+      } else {
+        items.forEach(it => it.classList.remove('is-active'));
+        items[newIdx].classList.add('is-active');
+      }
+
+      if (sectionId === 'varD') applyDriftClasses(newIdx);
+
+      // Background layer crossfade
+      bgLayers.forEach(l => l.classList.toggle('is-active', parseInt(l.dataset.idx, 10) === newIdx));
+
+      // Counter
+      if (counterNum) counterNum.textContent = String(newIdx + 1).padStart(2, '0');
+    }
+
+    items.forEach(it => {
+      it.addEventListener('click', () => setActive(parseInt(it.dataset.idx, 10)));
+    });
+
+    // Initial state
+    if (sectionId === 'varD') applyDriftClasses(0);
+    if (sectionId === 'varE') {
+      // Mark initial active chars as visible (no morph animation on load)
+      items[0].querySelectorAll('.char').forEach(c => {
+        c.style.opacity = '1';
+        c.style.transform = 'translateY(0)';
+      });
+    }
+  }
+
+  ['varA','varB','varC','varD','varE'].forEach(buildVariant);
+})();
+</script>
+
+</body>
+</html>
