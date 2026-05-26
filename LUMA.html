@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="pt-BR" class="has-custom-cursor" data-accent="gold" data-font="cormorant"><head>
+﻿<!DOCTYPE html><html lang="pt-BR" class="has-custom-cursor" data-accent="gold" data-font="cormorant"><head>
 
 
 <meta charset="utf-8">
@@ -2285,13 +2285,12 @@ body.ready .hero-bg-inner img { animation-play-state: running; }
   window.addEventListener('scroll', heroParallax, { passive: true });
   heroParallax();
 
-  /* ========== MANIFESTO — scroll-linked character animation ========== */
+  /* ========== MANIFESTO — char stagger via IntersectionObserver ========== */
   const manifestoSection = document.getElementById('manifesto');
   const manifestoText = document.getElementById('manifesto-text');
   const manifestoRule = document.getElementById('manifesto-rule');
 
   if (manifestoSection && manifestoText) {
-    // split text lines into char spans (preserving line wrappers)
     const chars = [];
     manifestoText.querySelectorAll('.line').forEach(lineEl => {
       const text = lineEl.textContent;
@@ -2300,7 +2299,7 @@ body.ready .hero-bg-inner img { animation-play-state: running; }
         const s = document.createElement('span');
         if (ch === ' ') {
           s.className = 'char space';
-          s.textContent = '\u00A0';
+          s.textContent = ' ';
         } else {
           s.className = 'char';
           s.textContent = ch;
@@ -2310,143 +2309,52 @@ body.ready .hero-bg-inner img { animation-play-state: running; }
       }
     });
 
-    const total = chars.length;
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
-
     if (reducedMotion) {
       chars.forEach(c => { c.style.opacity = 1; c.style.transform = 'none'; c.style.filter = 'none'; });
       if (manifestoRule) manifestoRule.style.width = '120px';
     } else {
-      // Hard-reset every character to the exact initial state so nothing floats in mid-animation on load
       chars.forEach(c => {
         c.style.opacity = '0';
-        c.style.transform = 'translateY(50px)';
-        c.style.filter = 'blur(4px)';
+        c.style.transform = 'translateY(28px)';
+        c.style.filter = 'blur(5px)';
+        c.style.transition = 'opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out), filter 0.55s ease';
       });
-      let willChangeOn = false;
-      // smoothed values follow raw targets with lerp factor 0.07
-      let smoothEnterP = 0;
-      let smoothExitP = 0;
-      let targetEnterP = 0;
-      let targetExitP = 0;
-      const LERP = 0.07;
-      const STAGGER_WINDOW = 0.70;
 
-      function setWillChange(on) {
-        if (on === willChangeOn) return;
-        willChangeOn = on;
-        const v = on ? 'transform, opacity, filter' : '';
-        for (let i = 0; i < total; i++) chars[i].style.willChange = v;
-      }
+      let fired = false;
+      const STAGGER_MS = 16;
+      const RULE_EXTRA = 180;
 
-      function computeTargets() {
-        const rect = manifestoSection.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const sectionH = rect.height;
-        const sectionCenter = rect.top + sectionH / 2;
-        const viewportCenter = vh / 2;
+      const manifestoIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting || fired) return;
+          fired = true;
+          manifestoIO.unobserve(manifestoSection);
 
-        // ENTER: 0 when section bottom enters viewport; 1 when section center aligns with viewport center
-        let enterP;
-        if (rect.bottom <= 0) {
-          enterP = 1;
-        } else if (rect.bottom >= vh) {
-          enterP = 0;
-        } else {
-          const startCenter = vh - sectionH / 2;
-          const endCenter = vh / 2;
-          const denom = startCenter - endCenter;
-          if (denom <= 0) {
-            enterP = sectionCenter <= viewportCenter ? 1 : 0;
-          } else {
-            const v = (startCenter - sectionCenter) / denom;
-            enterP = v < 0 ? 0 : v > 1 ? 1 : v;
+          const total = chars.length;
+          chars.forEach((c, i) => {
+            c.style.transitionDelay = (i * STAGGER_MS) + 'ms';
+            c.style.opacity = '1';
+            c.style.transform = 'translateY(0)';
+            c.style.filter = 'blur(0px)';
+          });
+
+          const totalDuration = (total - 1) * STAGGER_MS + 550;
+          setTimeout(() => {
+            chars.forEach(c => { c.style.transitionDelay = ''; });
+          }, totalDuration + 100);
+
+          if (manifestoRule) {
+            setTimeout(() => {
+              manifestoRule.style.transition = 'width 0.7s var(--ease-out)';
+              manifestoRule.style.width = '120px';
+            }, totalDuration - 300 + RULE_EXTRA);
           }
-        }
+        });
+      }, { threshold: 0.3 });
 
-        // EXIT: 0 when section center passes viewport center; 1 when section bottom leaves viewport
-        let exitP = 0;
-        if (sectionCenter < viewportCenter) {
-          const startBottom = viewportCenter + sectionH / 2;
-          const endBottom = 0;
-          const denom = startBottom - endBottom;
-          if (denom > 0) {
-            const v = (startBottom - rect.bottom) / denom;
-            exitP = v < 0 ? 0 : v > 1 ? 1 : v;
-          }
-        }
-
-        targetEnterP = enterP;
-        targetExitP = exitP;
-      }
-
-      const lerp = (a, b, t) => a + (b - a) * t;
-      const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
-
-      function render() {
-        // smooth toward targets
-        smoothEnterP += (targetEnterP - smoothEnterP) * LERP;
-        smoothExitP += (targetExitP - smoothExitP) * LERP;
-
-        // snap when close enough to avoid jitter
-        if (Math.abs(targetEnterP - smoothEnterP) < 0.0005) smoothEnterP = targetEnterP;
-        if (Math.abs(targetExitP - smoothExitP) < 0.0005) smoothExitP = targetExitP;
-
-        const enterP = smoothEnterP;
-        const exitP = smoothExitP;
-
-        // manage will-change
-        const active = (enterP > 0.001 && enterP < 0.999) || (exitP > 0.001 && exitP < 0.999);
-        setWillChange(active);
-
-        for (let i = 0; i < total; i++) {
-          const c = chars[i];
-          const charFrac = i / Math.max(1, total) * STAGGER_WINDOW;
-          const charRange = 1 / Math.max(1, total) * STAGGER_WINDOW;
-
-          const enterCharP = clamp01((enterP - charFrac) / charRange);
-          const exitCharP = clamp01((exitP - charFrac) / charRange);
-
-          let y, op, bl;
-          if (exitP > 0) {
-            y = lerp(0, -60, exitCharP);
-            op = lerp(1, 0, exitCharP);
-            bl = lerp(0, 4, exitCharP);
-          } else {
-            y = lerp(50, 0, enterCharP);
-            op = lerp(0, 1, enterCharP);
-            bl = lerp(4, 0, enterCharP);
-          }
-          c.style.transform = `translateY(${y}px)`;
-          c.style.opacity = op;
-          c.style.filter = `blur(${bl}px)`;
-        }
-
-        if (manifestoRule) {
-          let goldW = 0;
-          if (enterP >= 0.95) {
-            goldW = lerp(0, 120, clamp01((enterP - 0.95) / 0.05));
-          }
-          let goldOp = 1;
-          if (exitP > 0) {
-            goldOp = lerp(1, 0, clamp01(exitP / 0.10));
-          }
-          manifestoRule.style.width = goldW + 'px';
-          manifestoRule.style.opacity = goldOp;
-        }
-
-        requestAnimationFrame(render);
-      }
-
-      window.addEventListener('scroll', computeTargets, { passive: true });
-      window.addEventListener('resize', computeTargets);
-      computeTargets();
-      // start persistent rAF loop
-      requestAnimationFrame(render);
+      manifestoIO.observe(manifestoSection);
     }
   }
-
   /* ========== reveals via IntersectionObserver ========== */
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
